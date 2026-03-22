@@ -43,7 +43,18 @@ export default function FunCall() {
   useEffect(() => {
     const code = randomCode()
     setMyCode(code)
-    const peer = new Peer(code)
+    const peer = new Peer(code, {
+      host: 'funcall-peerserver.onrender.com',
+      port: 443,
+      path: '/peerjs',
+      secure: true,
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' }
+        ]
+      }
+    })
     peerRef.current = peer
     peer.on('open', () => setCallStatus('idle'))
     peer.on('error', (err) => setError(err.message))
